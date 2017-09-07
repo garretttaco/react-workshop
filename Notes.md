@@ -1,5 +1,5 @@
 # Day one
-
+__**These notes are sloppy and not meant to follow along with the lectures. These are my quickly taken, unedited notes, that I will use to reference in the future.**__
 ## Imperative and Declarative
 ### Imperative
 - You can write React in an imperative way, but you are missing out. 
