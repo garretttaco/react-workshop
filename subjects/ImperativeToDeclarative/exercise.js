@@ -16,12 +16,16 @@ class Modal extends React.Component {
     children: PropTypes.node
   }
 
-  open() {
-    $(this.node).modal('show')
+  componentDidMount() {
+    this.doImperativeWork()
   }
 
-  close() {
-    $(this.node).modal('hide')
+  componentDidUpdate() {
+    this.doImperativeWork()
+  }
+
+  doImperativeWork() {
+    $(this.node).modal(this.props.show ? 'show' : 'hide')
   }
 
   render() {
@@ -43,12 +47,16 @@ class Modal extends React.Component {
 }
 
 class App extends React.Component {
+  state = {
+    show: true
+  }
+
   openModal = () => {
-    this.modal.open()
+    this.setState({ show: true })
   }
 
   closeModal = () => {
-    this.modal.close()
+    this.setState({ show: false })
   }
 
   render() {
@@ -61,7 +69,7 @@ class App extends React.Component {
           onClick={this.openModal}
         >open modal</button>
 
-        <Modal title="Declarative is better" ref={modal => this.modal = modal}>
+        <Modal title="Declarative is better" show={this.state.show}>
           <p>Calling methods on instances is a FLOW not a STOCK!</p>
           <p>It’s the dynamic process, not the static program in text space.</p>
           <p>You have to experience it over time, rather than in snapshots of state.</p>
