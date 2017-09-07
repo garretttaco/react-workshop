@@ -30,8 +30,21 @@ Start every React app with a single component. Once you start to feel that you a
 
 ## Compound Components
 - Compound components allows people to make their own functionality and not have to add all the functionality to the top API.
-- 
-
 
 **Keyword phrases/terms**
 - Method signature: the method name and all its parameters.
+
+## Context
+- The parent's context API uses the word child and you can think of it as these are the context types I will give to my children. The children just say context types and it is an opt-in.
+When talking about components, it is easier to think about the concepts boiled down as functions first.
+Think of contexts as nested functions where if you define a variable in the outer most function, you can access that variable in any of the nested functions inside that top level one. So context is like using closures.
+- Contexts are an implicit API.
+The problem with context: `shouldComponentUpdate` when returns false is an update blocker. It is your chance to make the decision, this is my time to update and my whole tree to be updated. This is a hook to tweak things and modify what gets updated.
+Context is not broken in this case, it is just blocked. We just need to be aware that update blocker will block the children components from getting the new context that was defined after the state change. There is no case of old context and updated context. It is just context so there is no way to check if it changed in the update blocker.
+If you run into this case, then this means your app is broken, not context. You either need to not be using context or not using pure components.
+To get around this issue, use something like [react-broadcast](https://github.com/reacttraining/react-broadcast).
+Thats it. There are 
+
+**Q:** When opting into a parent context, it will fetch the context value of the nearest parent that has that context type.
+Does React consider the PropType declared when making the decision of what context to grab?
+**A:** Keys will always overwrite keys, no matter the prop type.
