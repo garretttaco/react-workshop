@@ -58,9 +58,24 @@ But es6 classes do not support mixins, so we cannot use those anymore. So, how d
 Sebastian Markbage proposed a pattern, back in 2015, to have a function that takes a component, then adds the boilerplate to the passes component and then it returns that same component with the added functionality.
 We can now decorate our class with functionality.
 
+### Upsides
+- The main upside to an HoC is that you can just import it, wrap it around your component and boom, you’re done. 
+This however can be a downside because if the HoC needs to re render, it will result render the whole wrapped component vs just re-rendering the section of Jsx that the render prop callback is defined in. 
+
 ### Caveats  
 - When exporting a component that is wrapped with a higher order component, you have to be sure to pass along all the props to the decorated component.
 - When looking in the devTools, the tree can get really messy and the hierarchy can get deep and hard to understand.
 - Higher-order components can override props. This can be hard to track down, especially if you have multiple HoCs wrapping your components.
 - There is indirection as to where the props are coming from, which mixins suffered from with state. Instead of mixing the code in with our class we are decorating it.
 - The higher-order component is defined statically.
+- You have to remember to pass the props.
+- The render method becomes imperative again. It is hard to tell what is going on at first glance. You have to go looking around to find out what is really happening.
+- The component that is wrapping the passed in component and has to do some work to act like that other component.
+- Every time you want to use an HoC, you have to create a new Component so to speak, eg: AppWithMouse, ExampleWithMouse, SomethingElseWithMouse.
+
+## Render props
+- Your render method becomes declarative again. You don't have to guess where these mysterious props are coming from. It can be tedious to follow them up the HoC tree if you have a lot of decorations.
+- The reason we don't call this "render callback" is because this already has a specific meaning for async things and event handling.
+We call it a render prop because it is just that, a prop that we are rendering.
+- Everyone knows how to compose functions but why not compose with Components?
+- Any HoC EVER WRITTEN can be written with a render prop. The inverse is not true.

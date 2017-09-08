@@ -17,14 +17,8 @@ import * as styles from './styles'
 
 const withMouse = Component => class DecoratedClass extends React.Component {
   state = {
-    mouse: {
-      x: 0,
-      y: 0
-    },
-    cat: {
-      x: 0,
-      y: 0
-    }
+    mouse: { x: 0, y: 0 },
+    cat: { x: 0, y: 0 }
   }
 
   handleMouseMove = ev => {
@@ -42,7 +36,7 @@ const withMouse = Component => class DecoratedClass extends React.Component {
   render() {
     return (
       <div style={{ height: '100%' }} onMouseMove={this.handleMouseMove}>
-        <div style={{...styles.cat, left: this.state.cat.x, top: this.state.cat.y }}/>
+        <div style={{ ...styles.cat, left: this.state.cat.x, top: this.state.cat.y }}/>
         <Component {...this.props} mouse={this.state.mouse}/>
       </div>
     )
