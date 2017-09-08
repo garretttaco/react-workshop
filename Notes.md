@@ -80,6 +80,14 @@ We call it a render prop because it is just that, a prop that we are rendering.
 - Everyone knows how to compose functions but why not compose with Components?
 - Any HoC EVER WRITTEN can be written with a render prop. The inverse is not true.
 - Provides dynamic composition.
+- This lets you compose ANYTHING! You can compose state.
 
-### Routing
+## Routing
 - When redirecting to a login page, clicking the back button after login should not redirect you to the login page, it should bring you back to the original url you were on before the redirect to login.
+
+## Performance
+- In React we need to profile our code. We can't just look at it and say oh you can't declare an anonymous function in the render method because it is a performance issue.
+- Use unique keys to avoid re-rendering items in an array if the contents didn't change. 
+- Make use of shouldComponentUpdate based on the props passed in and used. This will help React's reconciler decide if it needs to update that component instance .
+- Only render what is needed for the view port for large lists of render extensive items. If you want to have a reusable way to do this, react-virtualized is a good library to do this for you.
+

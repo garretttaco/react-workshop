@@ -24,21 +24,33 @@ class RainbowList extends React.Component {
     renderRowAtIndex: PropTypes.func.isRequired
   }
 
+  state = {
+    scrollTop: 0,
+    availableHeight: window.innerHeight,
+  }
+
+  trackScroll = ev => {
+    const scrollTop = ev.target.scrollTop
+    this.setState({ scrollTop, availableHeight: ev.target.offsetHeight })
+  }
+
   render() {
     const { numRows, rowHeight, renderRowAtIndex } = this.props
     const totalHeight = numRows * rowHeight
-
+    const { scrollTop, availableHeight } = this.state
+    const startIndex = Math.floor(scrollTop / rowHeight)
+    const endIndex = startIndex + Math.ceil(availableHeight / rowHeight)
     const items = []
-
-    let index = 0
-    while (index < numRows) {
+    let index = startIndex
+    while (index < endIndex) {
       items.push(<li key={index}>{renderRowAtIndex(index)}</li>)
       index++
     }
-
     return (
-      <div style={{ height: '100%', overflowY: 'scroll' }}>
-        <ol style={{ height: totalHeight }}>
+      <div style={{ height: '100%', overflowY: 'scroll' }}
+        onScroll={this.trackScroll}
+      >
+        <ol style={{ height: totalHeight, paddingTop: rowHeight * startIndex }}>
           {items}
         </ol>
       </div>
@@ -48,7 +60,7 @@ class RainbowList extends React.Component {
 
 ReactDOM.render(
   <RainbowList
-    numRows={500}
+    numRows={50000}
     rowHeight={RainbowListDelegate.rowHeight}
     renderRowAtIndex={RainbowListDelegate.renderRowAtIndex}
   />,
