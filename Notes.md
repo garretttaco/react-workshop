@@ -43,8 +43,24 @@ The problem with context: `shouldComponentUpdate` when returns false is an updat
 Context is not broken in this case, it is just blocked. We just need to be aware that update blocker will block the children components from getting the new context that was defined after the state change. There is no case of old context and updated context. It is just context so there is no way to check if it changed in the update blocker.
 If you run into this case, then this means your app is broken, not context. You either need to not be using context or not using pure components.
 To get around this issue, use something like [react-broadcast](https://github.com/reacttraining/react-broadcast).
-Thats it. There are 
+
+
+**Important reminder**: Child components do not know anything about their parents but the parents know everything about the children. They can read their props, add new props, clone them, etc.
 
 **Q:** When opting into a parent context, it will fetch the context value of the nearest parent that has that context type.
 Does React consider the PropType declared when making the decision of what context to grab?
 **A:** Keys will always overwrite keys, no matter the prop type.
+
+## Higher-order components
+It all started with the createClass API. If you wanted to share code, you would use mixins.
+Then React started favoring es6 classes because they did not want to keep maintaining createClass. You now just use a native JavaScript class and just extend the React.Component class.
+But es6 classes do not support mixins, so we cannot use those anymore. So, how do we share code?
+Sebastian Markbage proposed a pattern, back in 2015, to have a function that takes a component, then adds the boilerplate to the passes component and then it returns that same component with the added functionality.
+We can now decorate our class with functionality.
+
+### Caveats  
+- When exporting a component that is wrapped with a higher order component, you have to be sure to pass along all the props to the decorated component.
+- When looking in the devTools, the tree can get really messy and the hierarchy can get deep and hard to understand.
+- Higher-order components can override props. This can be hard to track down, especially if you have multiple HoCs wrapping your components.
+- There is indirection as to where the props are coming from, which mixins suffered from with state. Instead of mixing the code in with our class we are decorating it.
+- The higher-order component is defined statically.

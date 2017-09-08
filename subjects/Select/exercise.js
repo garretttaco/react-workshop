@@ -18,13 +18,67 @@ class Select extends React.Component {
     defaultValue: any
   }
 
+  state = {
+    isOpen: false,
+    value: this.props.defaultValue || null
+  }
+
+  open = () => {
+    this.setState({ isOpen: true })
+  }
+
+  close = () => {
+    this.setState({ isOpen: false })
+  }
+
+  getLabel() {
+    let label = null
+
+    React.Children.forEach(this.props.children, (child) => {
+      const childValue = child.props.value
+
+      if (
+        (this.isUncontrolled() && childValue === this.state.value) ||
+        (child.props.value === this.props.value)
+      ) {
+        label = child.props.children
+      }
+    })
+
+    return label
+  }
+
+  handleSelect = value => {
+    const nextState = { isOpen: false }
+
+    if (this.isUncontrolled())
+      nextState.value = value
+
+    this.setState(nextState, () => {
+      if (this.props.onChange)
+        this.props.onChange(value)
+    })
+  }
+
+  isUncontrolled() {
+    return this.props.value == null
+  }
+
+  renderChildren() {
+    return React.Children.map(this.props.children, (child) => (
+      React.cloneElement(child, {
+        onSelect: (value) => this.handleSelect(value)
+      })
+    ))
+  }
+
   render() {
     return (
       <div className="select">
-        <div className="label">label <span className="arrow">▾</span></div>
-        <div className="options">
-          {this.props.children}
-        </div>
+        <div className="label" onClick={this.open}>{this.getLabel()} <span className="arrow">▾</span></div>
+        {this.state.isOpen && <div className="options">
+          {this.renderChildren()}
+        </div>}
       </div>
     )
   }
@@ -32,16 +86,21 @@ class Select extends React.Component {
 
 
 class Option extends React.Component {
+
+  handleClick = () => {
+    this.props.onSelect(this.props.value)
+  }
+
   render() {
     return (
-      <div className="option">{this.props.children}</div>
+      <div className="option" onClick={this.handleClick}>{this.props.children}</div>
     )
   }
 }
 
 class App extends React.Component {
   state = {
-    selectValue: 'dosa'
+    selectValue: 'dosa',
   }
 
   setToMintChutney = () => {

@@ -15,8 +15,38 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import * as styles from './styles'
 
-const withMouse = (Component) => {
-  return Component
+const withMouse = Component => class DecoratedClass extends React.Component {
+  state = {
+    mouse: {
+      x: 0,
+      y: 0
+    },
+    cat: {
+      x: 0,
+      y: 0
+    }
+  }
+
+  handleMouseMove = ev => {
+    this.setState({
+      mouse: {
+        x: ev.clientX,
+        y: ev.clientY
+      },
+      cat: {
+        ...this.state.mouse
+      }
+    })
+  }
+
+  render() {
+    return (
+      <div style={{ height: '100%' }} onMouseMove={this.handleMouseMove}>
+        <div style={{...styles.cat, left: this.state.cat.x, top: this.state.cat.y }}/>
+        <Component {...this.props} mouse={this.state.mouse}/>
+      </div>
+    )
+  }
 }
 
 class App extends React.Component {
