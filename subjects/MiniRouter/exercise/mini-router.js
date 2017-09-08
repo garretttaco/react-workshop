@@ -19,6 +19,32 @@ history.push('/something')
 class Router extends React.Component {
   history = createHashHistory()
 
+  state = {
+    location: this.history.location
+  }
+
+  static childContextTypes = {
+    router: PropTypes.shape({
+      location: PropTypes.object.isRequired,
+      history: PropTypes.object.isRequired
+    })
+  }
+
+  getChildContext() {
+    return {
+      router: {
+        location: this.state.location,
+        history: this.history
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.history.listen(() => {
+      this.setState({ location: this.history.location })
+    })
+  }
+
   render() {
     return this.props.children
   }
@@ -27,9 +53,18 @@ class Router extends React.Component {
 
 
 class Route extends React.Component {
+  static contextTypes = {
+    router: PropTypes.shape({
+      location: PropTypes.object.isRequired,
+      history: PropTypes.object.isRequired
+    })
+  }
+
   render() {
     const { path, render, component:Component } = this.props
-    return null
+    return this.context.router.location.pathname.startsWith(path) ? (
+      Component ? <Component /> : render()
+      ) : null
   }
 }
 
@@ -37,10 +72,15 @@ class Route extends React.Component {
 
 
 class Link extends React.Component {
+  static contextTypes = {
+    router: PropTypes.shape({
+      history: PropTypes.object.isRequired
+    })
+  }
 
   handleClick = (e) => {
     e.preventDefault()
-
+    this.context.router.history.push(this.props.to)
   }
 
   render() {
@@ -55,4 +95,21 @@ class Link extends React.Component {
   }
 }
 
-export { Router, Route, Link }
+class Redirect extends React.Component {
+  static contextTypes = {
+    router: PropTypes.shape({
+      history: PropTypes.object.isRequired
+    })
+  }
+
+  componentDidMount() {
+    this.context.router.history.replace(this.props.to)
+  }
+
+  render()  {
+    return null
+  }
+}
+
+
+export { Router, Route, Link, Redirect }

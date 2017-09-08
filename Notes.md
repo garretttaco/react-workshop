@@ -79,3 +79,7 @@ This however can be a downside because if the HoC needs to re render, it will re
 We call it a render prop because it is just that, a prop that we are rendering.
 - Everyone knows how to compose functions but why not compose with Components?
 - Any HoC EVER WRITTEN can be written with a render prop. The inverse is not true.
+- Provides dynamic composition.
+
+### Routing
+- When redirecting to a login page, clicking the back button after login should not redirect you to the login page, it should bring you back to the original url you were on before the redirect to login.

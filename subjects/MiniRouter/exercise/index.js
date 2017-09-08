@@ -1,24 +1,27 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Router, Route, Link } from './mini-router'
+import { Router, Route, Link, Redirect } from './mini-router'
 
 const App = () => (
   <div>
     <ul>
       <li><Link to="/dashboard">Dashboard</Link></li>
       <li><Link to="/about">About</Link></li>
+      <li><Link to="/something-else">Something else</Link></li>
       <li><Link to="/topics">Topics</Link></li>
     </ul>
 
     <hr/>
-
-    <Route path="/dashboard" render={() => (
-      <div>
-        <h2>Dashboard</h2>
-      </div>
-    )}/>
-    <Route path="/about" component={About}/>
-    <Route path="/topics" component={Topics}/>
+      <Route path="/dashboard" render={() => (
+        <div>
+          <h2>Dashboard</h2>
+        </div>
+      )}/>
+      <Route path="/about" component={About}/>
+      <Route path="/topics" component={Topics}/>
+      <Route path="/something-else" render={() => (
+        <Redirect to="/about"/>
+      )}/>
   </div>
 )
 
